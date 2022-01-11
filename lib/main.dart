@@ -1,5 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -41,6 +43,27 @@ class _HomePageState extends State<HomePage> {
   var ballYDirection = direction.DOWN;
   var ballXDirection = direction.RIGHT;
   bool gameStarted = false;
+
+  void startGame() {
+    gameStarted = true;
+    Timer.periodic(Duration(milliseconds: 1), (timer) {
+      updatedDirection();
+      moveBall();
+      moveEnemy();
+      if (isPlayerDead()) {
+        enemyScore++;
+        timer.cancel();
+        _showDialog(false);
+        // resetGame();
+      }
+      if (isEnemyDead()) {
+        playerScore++;
+        timer.cancel();
+        _showDialog(true);
+        // resetGame();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
